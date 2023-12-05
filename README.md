@@ -24,7 +24,7 @@
 
 ### Weather Placeholder Back-end API
 
-Estimate of time needed to complete: _____
-Start time: _____
+Estimate of time needed to complete: 2 hrs
+Start time: 2 pm
 Finish time: _____
 Actual time needed to complete: _____
