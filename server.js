@@ -21,9 +21,19 @@ class Forecast {
     this.weather = weather;
     this.description = `Low of ${low}, high of ${high} with ${weather}`;
   }
+
+  toJSON() {
+    return {
+      date: this.date,
+      low: this.low,
+      high: this.high,
+      weather: this.weather,
+      description: this.description,
+    };
+  }
 }
 
-function findCityInfo(lat, lon, searchQuery, tolerance = 0.0001) {
+function findCityInfo(lat, lon, searchQuery, tolerance = 0.1) {
   return weatherData.find((city) => {
     const latDiff = Math.abs(parseFloat(city.lat) - parseFloat(lat));
     const lonDiff = Math.abs(parseFloat(city.lon) - parseFloat(lon));
@@ -57,9 +67,13 @@ app.get('/weather', (request, response) => {
         element.weather.description
       )
   );
-  console.log(cityForecasts);
-  response.status(200).send(cityForecasts);
-  //   response.json(cityForecasts);
+  //   console.log(cityForecasts);
+  // Use toJSON to serialize each Forecast instance
+  const serializedForecasts = cityForecasts.map((forecast) =>
+    forecast.toJSON()
+  );
+  response.status(200).json(serializedForecasts);
+  console.log(serializedForecasts);
 });
 
 // Your error-handling middleware
