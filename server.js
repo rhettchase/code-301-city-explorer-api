@@ -23,10 +23,12 @@ class Forecast {
   }
 }
 
-function findCityInfo(lat, lon, searchQuery) {
+function findCityInfo(lat, lon, searchQuery, tolerance = 0.0001) {
   return weatherData.find((city) => {
-    const latMatch = city.lat === lat.toString();
-    const lonMatch = city.lon === lon.toString();
+    const latDiff = Math.abs(parseFloat(city.lat) - parseFloat(lat));
+    const lonDiff = Math.abs(parseFloat(city.lon) - parseFloat(lon));
+    const latMatch = latDiff <= tolerance;
+    const lonMatch = lonDiff <= tolerance;
     const searchQueryMatch =
       city.city_name.toLowerCase() === searchQuery.toLowerCase();
     if (latMatch && lonMatch && searchQueryMatch) {
@@ -39,6 +41,13 @@ app.get('/weather', (request, response) => {
   const { lat, lon, searchQuery } = request.query;
   const cityInfo = findCityInfo(lat, lon, searchQuery);
   //   console.log(cityInfo);
+
+  if (!cityInfo) {
+    // No matching city found
+    response.status(404).send('City not found');
+    return;
+  }
+
   const cityForecasts = cityInfo.data.map(
     (element) =>
       new Forecast(
@@ -49,7 +58,35 @@ app.get('/weather', (request, response) => {
       )
   );
   console.log(cityForecasts);
-  response.json(cityForecasts);
+  response.status(200).send(cityForecasts);
+  //   response.json(cityForecasts);
+});
+
+// Your error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
+app.get('/throw-an-error', (request, response, next) => {
+  try {
+    // Simulate an error by throwing an exception
+    throw new Error('You did something really, really bad!');
+  } catch (error) {
+    // Pass the error to the next middleware
+    next(error);
+  }
+});
+
+// Not Found
+app.get('*', (request, response) => {
+  response.status(404).send('not found');
+});
+
+// error handling middleware must be the last app.use()
+app.use((error, request, response) => {
+  console.error(error);
+  response.status(500).send(error.message);
 });
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
