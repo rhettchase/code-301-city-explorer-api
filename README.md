@@ -1,29 +1,59 @@
 # City Explorer API
 
 **Author**: Rhett Chase
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+<!--increment the patch/fix version number if you make more commits past your first submission -->
+**Version**: 1.0.0
 
 ## Overview
 <!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
+### User Input
 
-Query parameters:
-lat: Latitude of the city searched
-lon: Longitude of the city searched
-searchQuery: City Name searched
+- `searchQuery`: City Name searched
+
+### LocationIQ Query parameters (used to fetch latitude, longitude, map render)
+
+- `searchQuery`: City Name searched
+
+### Weather Query parameters
+
+- `lat`: Latitude of the city searched
+- `lon`: Longitude of the city searched
+- `searchQuery`: City Name searched
+
+### Outputs
+
+- Rendered map based on city input from user form
+- City's forecast
+- Error messages
 
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
 
+### Dependencies
+
+- Obtain LocationIQ API key
+- `npm install express`
+- `npm install dotenv`
+- `npm install cors`
+
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+- Express.JS
+- React.JS
+- Bootstrap
+- Javascript
+- HTML
+- CSS
 
 ## Change Log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
 
 01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+12-05-2023 Application now has a fully-functional express server, with a GET route for the location and weather resource.
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+- chatGPT
 
 ## Time Estimates
 
@@ -31,5 +61,19 @@ searchQuery: City Name searched
 
 Estimate of time needed to complete: 2 hrs
 Start time: 2 pm
-Finish time: _____
-Actual time needed to complete: _____
+Finish time: 5 pm
+Actual time needed to complete: 3 hrs
+
+### Weather Placeholder Front-end
+
+Estimate of time needed to complete: 2 hrs
+Start time: 5 pm
+Finish time: 8 pm
+Actual time needed to complete: 3 hrs
+
+### Error Handling
+
+Estimate of time needed to complete: 1 hr
+Start time: 9 pm
+Finish time: 10 pm
+Actual time needed to complete: 1 hr
