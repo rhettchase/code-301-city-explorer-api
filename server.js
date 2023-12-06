@@ -16,9 +16,12 @@ app.use(cors());
 
 async function getWeather(request, response) {
   const { lat, lon, searchQuery } = request.query;
+  const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
+  // https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=91467d3cacf8488eb644ca4e11a9f575
+  // https://api.weatherbit.io/v2.0/forecast/daily?&lat=38.123&lon=-78.543&key=91467d3cacf8488eb644ca4e11a9f575
   const cityInfo = findCityInfo(lat, lon, searchQuery);
   //   console.log(cityInfo);
-
+  response.json(weatherUrl);
   if (!cityInfo) {
     // No matching city found
     response.status(404).send('City not found');
@@ -62,7 +65,6 @@ function findCityInfo(lat, lon, searchQuery, tolerance = 0.1) {
     }
   });
 }
-
 
 // Error handling
 function notFound(request, response) {
