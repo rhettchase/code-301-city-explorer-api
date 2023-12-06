@@ -14,7 +14,7 @@ app.use(cors());
 
 // routes
 
-app.get('/weather', (request, response) => {
+async function getWeather(request, response) {
   const { lat, lon, searchQuery } = request.query;
   const cityInfo = findCityInfo(lat, lon, searchQuery);
   //   console.log(cityInfo);
@@ -41,8 +41,9 @@ app.get('/weather', (request, response) => {
   );
   response.status(200).json(serializedForecasts);
   console.log(serializedForecasts);
-});
+}
 
+app.get('/weather', getWeather);
 app.get('*', notFound);
 app.use('*', errorHandler);
 
