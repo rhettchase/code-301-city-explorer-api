@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const { element } = require('prop-types');
 // Read in the shopping list from our "Database" (weather.json)
 // const weatherData = require('./data/weather.json');
 const PORT = process.env.PORT || 3001;
@@ -15,6 +16,7 @@ app.use(cors());
 
 // routes
 app.get('/weather', getWeather);
+app.get('/movie', getMovies);
 app.get('*', notFound);
 app.use('*', errorHandler);
 
@@ -44,36 +46,28 @@ async function getWeather(request, response) {
   }
 }
 
-function findCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {
-  
-}
+async function getMovies(request, response) {
+  const { searchQuery: searchQuery } = request.query;
 
-function xfindCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {
-  const data = apiResponse.data.data; // Access the 'data' property
-  // console.log('API Response Data:', data); // Log data to help debug
-
-  // Ensure data is an array before using the find method
-  if (!Array.isArray(data)) {
-    return null;
+  // Check if searchQuery is missing
+  if (!searchQuery) {
+    response.status(400).send('Bad Request: Missing searchQuery parameter');
+    return;
   }
 
-  return data.find((city) => {
-    if (!city) {
-      return false; // Skip undefined cities
-    }
+  const movieAPIurl = `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&api_key=${process.env.MOVIE_API_KEY}`;
 
-    const latDiff = Math.abs(parseFloat(city.lat) - parseFloat(lat));
-    const lonDiff = Math.abs(parseFloat(city.lon) - parseFloat(lon));
-    const latMatch = latDiff <= tolerance;
-    const lonMatch = lonDiff <= tolerance;
+  try {
+    const movieResponse = await axios.get(movieAPIurl);
+    const rawMovieData = movieResponse.data.results;
+    const movieArray = rawMovieData.map(element => new Movie(element));
+    console.log(movieArray);
+    response.status(200).json(movieArray);
 
-    // Check if city_name is present before comparing
-    const searchQueryMatch =
-      city.city_name &&
-      city.city_name.toLowerCase() === searchQuery.toLowerCase();
-    return searchQueryMatch;
-    // return latMatch && lonMatch && searchQueryMatch;
-  });
+  } catch (error) {
+    console.log(error);
+    response.status(500).send('Internal Server Error');
+  }
 }
 
 // Error handling
@@ -111,6 +105,19 @@ class Forecast {
       description: this.description,
     };
   }
+}
+
+class Movie {
+  constructor(data) {
+    this.title = data.title;
+    this.overview = data.overview;
+    this.average_votes = data.vote_average.toFixed(2); // Limit to 2 decimal places
+    this.total_votes = data.vote_count;
+    this.image_url = `https://image.tmdb.org/t/p/w500/${data.poster_path}`;
+    this.popularity = data.popularity.toFixed(4); // Limit to 4 decimal places
+    this.released_on = data.release_date;
+  }
+
 }
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
