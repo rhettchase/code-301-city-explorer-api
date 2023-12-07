@@ -4,9 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const { element } = require('prop-types');
-// Read in the shopping list from our "Database" (weather.json)
-// const weatherData = require('./data/weather.json');
 const PORT = process.env.PORT || 3001;
 
 const app = express();
