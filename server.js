@@ -3,8 +3,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 // Read in the shopping list from our "Database" (weather.json)
-const weatherData = require('./data/weather.json');
+// const weatherData = require('./data/weather.json');
 const PORT = process.env.PORT || 3001;
 
 const app = express();
@@ -15,35 +16,41 @@ app.use(cors());
 // routes
 
 async function getWeather(request, response) {
-  const { lat, lon, searchQuery } = request.query;
+  const { lat, lon } = request.query;
   const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
-  // https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=91467d3cacf8488eb644ca4e11a9f575
-  // https://api.weatherbit.io/v2.0/forecast/daily?&lat=38.123&lon=-78.543&key=91467d3cacf8488eb644ca4e11a9f575
-  const cityInfo = findCityInfo(lat, lon, searchQuery);
-  //   console.log(cityInfo);
-  response.json(weatherUrl);
-  if (!cityInfo) {
-    // No matching city found
-    response.status(404).send('City not found');
-    return;
-  }
 
-  const cityForecasts = cityInfo.data.map(
-    (element) =>
-      new Forecast(
-        element.datetime,
-        element.low_temp,
-        element.max_temp,
-        element.weather.description
-      )
-  );
-  //   console.log(cityForecasts);
-  // Use toJSON to serialize each Forecast instance
-  const serializedForecasts = cityForecasts.map((forecast) =>
-    forecast.toJSON()
-  );
-  response.status(200).json(serializedForecasts);
-  console.log(serializedForecasts);
+  try {
+    const weatherResponse = await axios.get(weatherUrl);
+    // const cityInfo = findCityInfo(weatherResponse, lat, lon, searchQuery);
+    // // response.json(weatherResponse.data);
+    // console.log(cityInfo);
+
+    // if (!cityInfo) {
+    //   // No matching city found
+    //   response.status(404).send('City not found');
+    //   return;
+    // }
+    console.log(weatherResponse.data.city_name);
+    const cityForecasts = weatherResponse.data.data.map(
+      (element) =>
+        new Forecast(
+          element.datetime,
+          element.low_temp,
+          element.max_temp,
+          element.weather.description
+        )
+    );
+
+    // Use toJSON to serialize each Forecast instance
+    // const serializedForecasts = cityForecasts.map((forecast) =>
+    //   forecast.toJSON()
+    // );
+    response.status(200).json(cityForecasts);
+  } catch (error) {
+    // Handle errors, log them, and send an appropriate response
+    console.error(error);
+    response.status(500).send('Internal Server Error');
+  }
 }
 
 app.get('/weather', getWeather);
@@ -52,17 +59,33 @@ app.use('*', errorHandler);
 
 // Helper Functions
 
-function findCityInfo(lat, lon, searchQuery, tolerance = 0.1) {
-  return weatherData.find((city) => {
+function findCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {}
+
+function xfindCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {
+  const data = apiResponse.data.data; // Access the 'data' property
+  // console.log('API Response Data:', data); // Log data to help debug
+
+  // Ensure data is an array before using the find method
+  if (!Array.isArray(data)) {
+    return null;
+  }
+
+  return data.find((city) => {
+    if (!city) {
+      return false; // Skip undefined cities
+    }
+
     const latDiff = Math.abs(parseFloat(city.lat) - parseFloat(lat));
     const lonDiff = Math.abs(parseFloat(city.lon) - parseFloat(lon));
     const latMatch = latDiff <= tolerance;
     const lonMatch = lonDiff <= tolerance;
+
+    // Check if city_name is present before comparing
     const searchQueryMatch =
+      city.city_name &&
       city.city_name.toLowerCase() === searchQuery.toLowerCase();
-    if (latMatch && lonMatch && searchQueryMatch) {
-      return city;
-    }
+    return searchQueryMatch;
+    // return latMatch && lonMatch && searchQueryMatch;
   });
 }
 
@@ -81,22 +104,6 @@ app.use((error, request, response) => {
   console.error(error);
   response.status(500).send(error.message);
 });
-
-// Your error-handling middleware
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).send('Something went wrong!');
-// });
-
-// app.get('/throw-an-error', (request, response, next) => {
-//   try {
-//     // Simulate an error by throwing an exception
-//     throw new Error('You did something really, really bad!');
-//   } catch (error) {
-//     // Pass the error to the next middleware
-//     next(error);
-//   }
-// });
 
 // class
 class Forecast {
