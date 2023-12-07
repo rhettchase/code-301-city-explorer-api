@@ -37,7 +37,9 @@ The application features live weather and movie data in response to City Explore
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
 
-### Install/Confirm Dependencies
+The deployed site will run "as is" with no need to install additional dependencies. The front-end is hosted on Nelify with installed environment variable for the LocationIQ API. The back-end is hosted on a custom API server, which provides data for the City Explorer front-end application.
+
+### Install/Confirm Dependencies for Development Use
 
 - `node`
 - `npm install express`
@@ -45,6 +47,9 @@ The application features live weather and movie data in response to City Explore
 - `npm install cors`
 - `npm install axios`
 - review/confirm dependencies on `package.json`
+- `WeatherBit` API token
+- `MovieDB` API token
+- Create an `.env` file: Your API key goes here for local development. Make sure this file is in your `.gitignore`.
 
 ### Set-up server in server.js
 
@@ -67,6 +72,7 @@ The application features live weather and movie data in response to City Explore
 01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
 - 12-05-2023 Application now has a fully-functional express server which is hosted locally, with a GET route for the location and weather resource.
 - 12-06-2023 Application now has a fully-functional express server which is hosted externally on Render, with a GET route for the location, weather, and movie resources. The site is deployed from an externally hosted custom server. Users can now access the City Explorer application on the web, and explore from anywhere.
+- 12-07-2023 Application has been refactored to modularize the back-end codebase.
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
@@ -84,13 +90,6 @@ The application features live weather and movie data in response to City Explore
 Estimate of time needed to complete: 2 hrs
 Start time: 2 pm
 Finish time: 5 pm
-Actual time needed to complete: 3 hrs
-
-### Weather Placeholder Front-end
-
-Estimate of time needed to complete: 2 hrs
-Start time: 5 pm
-Finish time: 8 pm
 Actual time needed to complete: 3 hrs
 
 ### Error Handling
@@ -122,3 +121,12 @@ Estimate of time needed to complete: 1 hr
 Start time: 6 pm
 Finish time: 7 pm
 Actual time needed to complete: 1 hr
+
+## Time Estimate Lab-09
+
+### Refactor: Modularize the back-end codebase
+
+Estimate of time needed to complete: 1 hr
+Start time: 2 pm
+Finish time: 2:30 pm
+Actual time needed to complete: 30 min
