@@ -14,6 +14,11 @@ const app = express();
 app.use(cors());
 
 // routes
+app.get('/weather', getWeather);
+app.get('*', notFound);
+app.use('*', errorHandler);
+
+// Helper Functions
 
 async function getWeather(request, response) {
   const { lat, lon } = request.query;
@@ -21,15 +26,6 @@ async function getWeather(request, response) {
 
   try {
     const weatherResponse = await axios.get(weatherUrl);
-    // const cityInfo = findCityInfo(weatherResponse, lat, lon, searchQuery);
-    // // response.json(weatherResponse.data);
-    // console.log(cityInfo);
-
-    // if (!cityInfo) {
-    //   // No matching city found
-    //   response.status(404).send('City not found');
-    //   return;
-    // }
     console.log(weatherResponse.data.city_name);
     const cityForecasts = weatherResponse.data.data.map(
       (element) =>
@@ -40,11 +36,6 @@ async function getWeather(request, response) {
           element.weather.description
         )
     );
-
-    // Use toJSON to serialize each Forecast instance
-    // const serializedForecasts = cityForecasts.map((forecast) =>
-    //   forecast.toJSON()
-    // );
     response.status(200).json(cityForecasts);
   } catch (error) {
     // Handle errors, log them, and send an appropriate response
@@ -53,13 +44,9 @@ async function getWeather(request, response) {
   }
 }
 
-app.get('/weather', getWeather);
-app.get('*', notFound);
-app.use('*', errorHandler);
-
-// Helper Functions
-
-function findCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {}
+function findCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {
+  
+}
 
 function xfindCityInfo(apiResponse, lat, lon, searchQuery, tolerance = 0.1) {
   const data = apiResponse.data.data; // Access the 'data' property

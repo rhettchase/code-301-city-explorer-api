@@ -65,9 +65,9 @@ Application is the back-end API for City Explorer. It will take in a request (ci
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 - chatGPT
 
-## Time Estimates
+## Time Estimates Lab-07
 
-### Weather Placeholder Back-end API
+### Weather Placeholder Back-end Static API
 
 Estimate of time needed to complete: 2 hrs
 Start time: 2 pm
@@ -87,3 +87,12 @@ Estimate of time needed to complete: 1 hr
 Start time: 9 pm
 Finish time: 10 pm
 Actual time needed to complete: 1 hr
+
+## Time Estimates Lab-08
+
+### Weather Back-end Live API
+
+Estimate of time needed to complete: 2 hrs
+Start time: 130 pm
+Finish time: 4 pm
+Actual time needed to complete: 2.5 hrs
