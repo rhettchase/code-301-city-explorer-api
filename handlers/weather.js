@@ -1,12 +1,18 @@
 const axios = require('axios');
+const cache = require('../cache');
 
-async function getWeather(request, response) {
+module.exports = async function getWeather(request, response) {
   const { lat, lon } = request.query;
-  const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
+  const key = `weather-${lat}${lon}`;
+  const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&days=5`;
+
 
   try {
+    cache['willThisWork'] = 'yes!';
+    console.log(key, cache);
+
     const weatherResponse = await axios.get(weatherUrl);
-    console.log(weatherResponse.data.city_name);
+    console.log('city name searched:', weatherResponse.data.city_name);
     const cityForecasts = weatherResponse.data.data.map(
       (element) =>
         new Forecast(
@@ -22,7 +28,7 @@ async function getWeather(request, response) {
     console.error(error);
     response.status(500).send('Internal Server Error');
   }
-}
+};
 
 // class
 class Forecast {
@@ -35,5 +41,3 @@ class Forecast {
   }
 
 }
-
-module.exports = getWeather;

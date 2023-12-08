@@ -3,10 +3,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const getWeather = require('./lib/weather');
-const getMovies = require('./lib/movies');
-const notFound = require('./lib/notFound');
-const errorHandler = require('./lib/errorHandler');
+const getWeather = require('./handlers/weather');
+const getMovies = require('./handlers/movies');
+const notFound = require('./handlers/notFound');
+const errorHandler = require('./handlers/errorHandler');
 const PORT = process.env.PORT || 3001;
 
 const app = express();
