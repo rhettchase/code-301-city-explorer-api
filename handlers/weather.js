@@ -14,7 +14,7 @@ module.exports = async function getWeather(request, response) {
     console.log('seconds since last fetch:', timeSinceLastFetch / 1000);
     console.log(cache[key]);
 
-    response.status(200).json(cache[key].data);
+    response.status(200).json(cache[key]);
   } else {
     console.log('fetching from API');
 
@@ -40,7 +40,7 @@ module.exports = async function getWeather(request, response) {
         PTfetch: pacificTimeString,
         data: cityForecasts,
       };
-      response.status(200).json(cityForecasts);
+      response.status(200).json(cache[key]);
       console.log(cache[key]);
     } catch (error) {
       // Handle errors, log them, and send an appropriate response

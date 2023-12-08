@@ -20,7 +20,7 @@ module.exports = async function getMovies(request, response) {
     console.log('seconds since last fetch:', timeSinceLastFetch / 1000);
     console.log(cache[key]);
 
-    response.status(200).json(cache[key].data);
+    response.status(200).json(cache[key]);
   } else {
     console.log('fetching from API');
 
@@ -38,7 +38,7 @@ module.exports = async function getMovies(request, response) {
         data: movieArray
       };
       console.log(cache[key]);
-      response.status(200).json(movieArray);
+      response.status(200).json(cache[key]);
     } catch (error) {
       console.log(error);
       response.status(500).send('Internal Server Error');
