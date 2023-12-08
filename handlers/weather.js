@@ -6,8 +6,11 @@ module.exports = async function getWeather(request, response) {
   const key = `weather-${lat}${lon}`;
   const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&days=5`;
 
-  if (cache[key]) {
+  if (cache[key] && Date.now() - cache[key].timestamp < 50 * 1000) {
     console.log('fetching from cache');
+    let timeSinceLastFetch = Date.now() - cache[key].timestamp;
+    console.log('seconds since last fetch:', timeSinceLastFetch / 1000);
+
     response.status(200).json(cache[key].data);
   } else {
     console.log('fetching from API');
