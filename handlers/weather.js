@@ -31,6 +31,7 @@ module.exports = async function getWeather(request, response) {
         data: cityForecasts,
       };
       response.status(200).json(cityForecasts);
+      console.log(cache[key]);
     } catch (error) {
       // Handle errors, log them, and send an appropriate response
       console.error(error);
