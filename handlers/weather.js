@@ -6,15 +6,16 @@ module.exports = async function getWeather(request, response) {
   const key = `weather-${lat}${lon}`;
   const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&days=5`;
 
-  if (cache[key] === undefined) {
-    console.log('fetching from api');
-
-    const weatherResponse = await axios.get(weatherUrl);
-    console.log('city name searched:', weatherResponse.data.city_name);
+  if (cache[key]) {
+    console.log('fetching from cache');
+    response.status(200).json(cache[key].data);
+  } else {
+    console.log('fetching from API');
 
     try {
-      // cache['willThisWork'] = 'yes!';
-      // console.log(key, cache);
+      const weatherResponse = await axios.get(weatherUrl);
+      console.log('city name searched:', weatherResponse.data.city_name);
+
       const cityForecasts = weatherResponse.data.data.map(
         (element) =>
           new Forecast(
@@ -24,16 +25,17 @@ module.exports = async function getWeather(request, response) {
             element.weather.description
           )
       );
-      cache[key] = { forecast: cityForecasts };
+
+      cache[key] = {
+        timestamp: Date.now(),
+        data: cityForecasts,
+      };
       response.status(200).json(cityForecasts);
     } catch (error) {
       // Handle errors, log them, and send an appropriate response
       console.error(error);
       response.status(500).send('Internal Server Error');
     }
-  } else {
-    console.log('fetching from cache');
-    response.status(200).json(cache[key]);
   }
 };
 
