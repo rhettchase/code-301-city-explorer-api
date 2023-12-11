@@ -2,7 +2,7 @@
 
 **Author**: Rhett Chase
 <!--increment the patch/fix version number if you make more commits past your first submission -->
-**Version**: 1.0.0
+**Version**: 2.0.0
 
 ## Overview
 <!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
@@ -49,12 +49,13 @@ The deployed site will run "as is" with no need to install additional dependenci
 - review/confirm dependencies on `package.json`
 - `WeatherBit` API token
 - `MovieDB` API token
+- `Yelp` API token
 - Create an `.env` file: Your API key goes here for local development. Make sure this file is in your `.gitignore`.
 
 ### Set-up server in server.js
 
 - create `.env` file and add `PORT` variable `PORT=3001`
-- add API keys for `WeatherBit` API and `MovieDB` API to `.env` file
+- add API keys for `WeatherBit` API, `MovieDB` API, and `Yelp` API to `.env` file
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
@@ -73,6 +74,7 @@ The deployed site will run "as is" with no need to install additional dependenci
 - 12-05-2023 Application now has a fully-functional express server which is hosted locally, with a GET route for the location and weather resource.
 - 12-06-2023 Application now has a fully-functional express server which is hosted externally on Render, with a GET route for the location, weather, and movie resources. The site is deployed from an externally hosted custom server. Users can now access the City Explorer application on the web, and explore from anywhere.
 - 12-07-2023 Application has been refactored to modularize the back-end codebase.
+- 12-10-2023 Application now caches data of API results from third-party APIs and stores in server memory for later retrieval. The API results are returned from a server memory, rather than incurring the delay of repeating the request to third-party APIs. It also includes logic to test if the data is "recent" or "stale". If the data is deemed to be stale and in need of updating ("cache invalidation" the server will do a fresh pull from the 3rd Party API. The application now includes restaurant route that can access data from the Yelp API.
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
@@ -80,6 +82,7 @@ The deployed site will run "as is" with no need to install additional dependenci
 - WeatherBit API
 - LocationIQ API
 - MovieDB API
+- Yelp API
 - Render (for hosting server)
 - Nelify (for hosting front-end)
 
@@ -130,3 +133,12 @@ Estimate of time needed to complete: 1 hr
 Start time: 2 pm
 Finish time: 2:30 pm
 Actual time needed to complete: 30 min
+
+## Time Estimate Lab-10
+
+### Cache API data and add Yelp API
+
+Estimate of time needed to complete: 2 hrs
+Start time: 3 pm
+Finish time: 5 pm
+Actual time needed to complete: 2 hrs
